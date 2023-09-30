@@ -1,46 +1,8 @@
 import React from 'react';
 import { graphql, useStaticQuery, Link,PageProps,navigate } from 'gatsby';
-import styled from 'styled-components';
 import Pagination from '../components/pagination';
+import Layout from '../components/layout';
 
-const Wrapper = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const ListItem = styled.section`
-  margin-bottom: 2rem;
-`;
-
-const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 1rem;
-`;
-
-const Tips = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledTime = styled.time`
-  font-size: 1rem;
-`;
-
-const Categories = styled.div`
-  span {
-    font-weight: bold;
-  }
-`;
-
-const Tags = styled.div`
-  span {
-    font-weight: bold;
-  }
-`;
-
-const Summary = styled.div`
-  margin-top: 1rem;
-`;
 
 interface PageContextProps {
   limit: number;
@@ -49,10 +11,10 @@ interface PageContextProps {
   currentPage: number;
 }
 
-const Layout: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
+const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
   const {limit, skip, numPages, currentPage} = pageContext;
-  const data = useStaticQuery<Queries.layoutQuery>(graphql`
-    query layout {
+  const data = useStaticQuery<Queries.postListQuery>(graphql`
+    query postList {
       allMdx {
         edges {
           node {
@@ -73,28 +35,29 @@ const Layout: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
   `);
 
   return (
-    <Wrapper className="max-wrapper">
+    <Layout>
+    <div className="max-wrapper">
       {data.allMdx.edges.map(({ node }, uniqueKey) => {
         if (!node.fields?.slug || !node.frontmatter?.title || !node.frontmatter?.date)
           return <div key={uniqueKey}>Cannot query required fields</div>;
 
         return (
-          <ListItem key={node.fields.slug} className="list-item" >
-            <Title className="title">
+          <section key={node.fields.slug} className="list-item" >
+            <h1 className="title">
               <Link to={node.fields.slug}>{node.frontmatter.title}</Link>
-            </Title>
-            <Tips className="tips">
+            </h1>
+            <div className="tips">
               <div className="date">
-              <StyledTime dateTime={node.frontmatter.date && typeof node.frontmatter.date === 'string'
+              <time dateTime={node.frontmatter.date && typeof node.frontmatter.date === 'string'
                 ? new window.Date(node.frontmatter.date).toISOString()
                 : ''}>
                 {node.frontmatter.date && typeof node.frontmatter.date === 'string'
                   ? new window.Date(node.frontmatter.date).toLocaleDateString()
                   : 'Invalid Date'}
-              </StyledTime>
+              </time>
               </div>
               {node.frontmatter.categories && (
-                <Categories className="categories">
+                <div className="categories">
                   <span>Categories:</span>
                   {node.frontmatter.categories
                     .filter((category): category is string => category !== null)
@@ -104,10 +67,10 @@ const Layout: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
                         {category}
                       </Link>
                     ))}
-                </Categories>
+                </div>
               )}
               {node.frontmatter.tags && (
-                <Tags className="tags">
+                <div className="tags">
                   <span>Tags:</span>
                   {node.frontmatter.tags
                     .filter((tag): tag is string => tag !== null)
@@ -117,11 +80,11 @@ const Layout: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
                         {tag}
                       </Link>
                     ))}
-                </Tags>
+                </div>
               )}
-            </Tips>
-            <Summary className="summary">{node.excerpt}</Summary>
-          </ListItem>
+            </div>
+            <div className="summary">{node.excerpt}</div>
+          </section>
         );
       })}
             <Pagination 
@@ -137,10 +100,11 @@ const Layout: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
           }
         }} 
       />
-    </Wrapper>
+    </div>
+    </Layout>
   );
 };
 
 
 
-export default Layout;
+export default PostList;

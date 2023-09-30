@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { graphql } from 'gatsby';
-import { MDXProvider } from "@mdx-js/react"
+import { MDXProvider } from "@mdx-js/react";
+import Layout from '../components/layout';
+import 'katex/dist/katex.min.css';
 
 export const query = graphql`
   query($id: String!) {
@@ -29,11 +31,11 @@ interface BlogPostProps {
 }
 
 const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,children }) => (
-  <>
+  <Layout>
     <h1>{data.mdx.frontmatter.title}</h1>
     <p>{data.mdx.frontmatter.date}</p>
     <MDXProvider>{children}</MDXProvider>
-  </>
+  </Layout>
 );
 
 export default BlogPost;

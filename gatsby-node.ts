@@ -19,7 +19,7 @@ export const onCreateNode: GatsbyNode['onCreateNode'] = ({ node, getNode, action
 export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions }) => {
   const { createPage } = actions;
 
-  const result = await graphql<Queries.createPagesQuery>(`
+  const pageResult = await graphql<Queries.createPagesQuery>(`
     query createPages{
       allMdx {
         totalCount
@@ -27,14 +27,14 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
     }
   `);
 
-  if (result.errors || result.data === undefined) {
-    console.error(result.errors)
-    throw result.errors
+  if (pageResult.errors || pageResult.data === undefined) {
+    console.error(pageResult.errors)
+    throw pageResult.errors
   }
 
   const postsPerPage = 10;
 
-  const numPages = Math.ceil(result.data.allMdx.totalCount / postsPerPage);
+  const numPages = Math.ceil(pageResult.data.allMdx.totalCount / postsPerPage);
 
   Array.from({ length: numPages }).forEach((_, i) => {
     // 밑에 주소는 너 필요한대로 수정하셈
@@ -65,7 +65,7 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
   }
 `)
 if (postsResult.errors) {
-  reporter.panicOnBuild('Error loading MDX result', result.errors)
+  reporter.panicOnBuild('Error loading MDX result', pageResult.errors)
 }
 
 // Create blog post pages.
