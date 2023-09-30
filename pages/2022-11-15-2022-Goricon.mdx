@@ -1,0 +1,305 @@
+---
+title: 2022 Goricon 출제 후기
+tags: [ps]
+categories: [ps, codeforces]
+style: fill
+color: primary
+date: 2022-11-15 00:23:00+0900
+description: 4번째 대회 출제, 많은 아쉬움과 부족함을 깨닫개 해준
+external_url:
+---
+# 와! 고리콘!
+경북대학교 알고리즘 동아리 Gori에서는 매년 알고리즘 대회인 Goricon을 개최하고 있다. 올해로 연속 3년동안 출제를 하고 있는데 솔직히 나도 대회 나가서 상받고 싶다.. 이번에는 총 3문제를 출제했다. C, D, I를 출제했고 C를 제외하면 별 문제가 없었던 것 같다. 본인 문제도 포함하는 말이긴 한데 이번 대회 문제퀄이 좀 구리다는 것을 부정하지는 못하겠다.
+
+# 도미노 무너트리기
+[https://www.acmicpc.net/problem/25972](https://www.acmicpc.net/problem/25972)
+
+어려울 것 없는 실버 그리디 문제다. 처음 지문을 쓸 때 왼쪽에서 i번째 좌표라고 해서 문제 데이터가 정렬된 것으로 오해한 사람이 많았던 것 같다. 한 번 더 확인 하지 않은 잘못이 맞고 다음에는 더 똑바로 확인해야겠다.
+
+풀이는 간단하게 정렬 후 도미노를 연쇄적으로 쓰러트릴 수 없을 때만 카운팅해주면 된다.
+
+여담인데 원래 문제는 오른쪽으로만 쓰러트리는게 아니라 왼쪽으로도 쓰러질 수 있던 dp문제였다. 검수 중 전체적인 대회 난이도가 너무 높다는 지적이 있어 몇 문제를 수정하던 중 얘도 같이 수정되었다.
+
+<details>
+<summary>정해</summary>
+<div markdown="1">
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int cache[500100];
+int n;
+vector<pair<int,int>> arr;
+int lcache[500100], rcache[500100];
+
+int lft(int here)
+{
+    int& ret = lcache[here];
+    if(ret != -1) return ret;
+    if(here == n-1) return n;
+    ret = here+1;
+    if(arr[here+1].first - arr[here].first <= arr[here].second )
+    {
+        ret = lft(here+1);
+    }
+    return ret;
+}
+int rgt(int here)
+{
+    int& ret = rcache[here];
+    if(ret != -1) return ret;
+    if(here == n-1) return n;
+    ret = here+1;
+    if(arr[here+1].first - arr[here].first <= arr[here+1].second )
+    {
+        ret = rgt(here+1);
+    }
+    return ret;
+}
+int dp(int here)
+{
+    if(here == n) return 0;
+    int& ret = cache[here];
+    if(ret != -1) return ret;
+    return ret = dp(lft(here)) + 1;
+}
+
+int32_t main()
+{
+    memset(cache, -1, sizeof(cache));
+    memset(lcache, -1, sizeof(cache));
+    memset(rcache, -1, sizeof(cache));
+    cin.tie(0)->sync_with_stdio(0);
+    cin>>n;
+    for(int i=0;i<n;++i)
+    {
+        int a, b;
+        cin>>a>>b;
+        arr.push_back({a, b});
+    }
+    sort(arr.begin(), arr.end());
+    cout<<dp(0);
+}
+```
+</div>
+</details>
+
+# 태풍 예보
+[https://www.acmicpc.net/problem/25971](https://www.acmicpc.net/problem/25971)
+
+의도는 골드 4정도였는데 생각보다 구현이 빡셌던 것 같다. 쿼리를 정렬 후 사람 위치 좌표를 날짜에 맞게 이동시키면서 태풍 안에 있다면 ccw를 통해 안전/위험 반원을 판별해주면 된다. 태풍이 이동하는 방향이 x축 혹은 y축에 평행하므로 굳이 ccw를 사용하지 않고도 판별할 수 있다. 아마 다들 풀이를 몰라서 틀린게 아니라 구현 실수를 하지 않았나 싶다. 그 외에 거리를 비교할 때 double을 쓰면 실수 오차로 인해 틀릴 수 있다.
+
+<details>
+<summary>정해</summary>
+<div markdown="1">
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+#define int long long
+#define X real()
+#define Y imag()
+const double PI = acos(-1);
+namespace Geometry
+{
+    template<typename T>
+    T cross_product(const complex<T>& a, const complex<T>& b)
+    {
+        return (conj(a)*b).Y;
+    }
+
+    template<typename T>
+    T inner_product(const complex<T>& a, const complex<T>& b)
+    {
+        return a.X*b.X+a.Y+b.Y;
+    }
+
+    template<typename T>
+    T ccw(const complex<T>& a, const complex<T>& b, const complex<T>& pos)
+    {
+        T ret = cross_product(pos-a, pos-b);
+        return ret;
+    }
+}
+
+int result[100000];
+string p[3] = {"unsafe", "safe", "gori"};
+int32_t main()
+{
+    cin.tie(0)->sync_with_stdio(0);
+    int n, k, r, q;
+    cin>>n>>k>>r>>q;
+    vector<pair<int, complex<int>>> typhoon(k);
+    vector<tuple<int, complex<int>, int>> query(q);
+
+    for(int i=0;i<k;++i)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        complex<int> pos = {b, c};
+        typhoon[i] = make_pair(a, pos);
+    }
+    for(int i=0;i<q;++i)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        complex<int> pos = {b, c};
+        query[i] = make_tuple(a, pos, i);
+    }
+    //sort(typhoon.begin(), typhoon.end(), [](pair<int, complex<int>>& a, pair<int, complex<int>>& b) {
+    //    return a.first < b.first;
+    //});
+    sort(query.begin(), query.end(), [](tuple<int, complex<int>, int>& a, tuple<int, complex<int>, int>& b) {
+        return get<0>(a) < get<0>(b);
+    });
+    int day = 0;
+    for(auto& [qday, pos, x] : query)
+    {
+        while(typhoon[day+1].first < n && typhoon[day+1].first <= qday)
+        {
+            ++day;
+        }
+        complex<int> herepos = typhoon[day].second;
+        complex<int> delta = typhoon[day+1].second - typhoon[day].second;
+        if(delta.X > 0) delta = {1, 0};
+        if(delta.Y > 0) delta = {0, 1};
+        if(delta.X < 0) delta = {-1, 0};
+        if(delta.Y < 0) delta = {0, -1};
+        herepos += delta * (qday - typhoon[day].first);
+        int c = Geometry::ccw(typhoon[day].second, typhoon[day+1].second, pos);
+        if(c == 0 || norm(herepos-pos) > r*r)
+        {
+            result[x] = 2;
+        }
+        else if(c > 0)
+        {
+            result[x] = 1;
+        }
+        else
+        {
+            result[x] = 0;
+        }
+    }
+
+    for(int i=0;i<q;++i)
+    {
+        cout<<p[result[i]]<<endl;
+    }
+}
+```
+</div>
+</details>
+
+# 어지러운 트리
+[https://www.acmicpc.net/problem/25973](https://www.acmicpc.net/problem/25973)
+
+트리 루트를 바꾸는 문제가 하나 더 있었는데 거기서 영감을 받아 만들었다. 루트가 바뀌지 않는다고 가정하고 2번 쿼리만 들어오면 가능한 경우의 수를 먼저 세어보자. cnt(x): 1을 루트로 하는 트리에서 x를 포함한 x의 자식 노드 개수라고 정의한다. 그렇다면 2 x 쿼리는 x의 직계 자식을 a_1 .. a_i 라고 했을 때 $$cnt(a_1) \times cnt(a_2) + cnt(a_1) \times cnt(a_3) + .. + cnt(a_{i-1}) \times cnt(a_i)$$ 가 된다. 이 식은 계산하는데 직계 자식의 개수 제곱이 걸릴 것 같아보이지만 다음과 같이 식정리를 하면 선형 시간에 계산 가능하다.
+
+$$cnt(a_1) \times (cnt(a_2)+..+cnt(a_i)) + cnt(a_2) \times (cnt(a_1)+cnt(a_3)+..+cnt(a_i)) + .. + cnt(a_i) \times (cnt(a_1) + .. cnt(a_{i-1}))$$
+
+이제 이렇게 세는 아이디어를 토대로 1번 쿼리와 2번쿼리가 같이 들어온다고 가정해보자. 1번 노드를 루트로 하는 트리 기준으로 현재 루트가 x의 자식에 포함되지 않는다면 2번 쿼리도 변하지 않는다. 하지만 현재 루트가 x의 자식에 포함된다면 현재 루트에 속하는 경로에 있는 가지는 빼주고 x의 부모로 가는 가지를 추가해서 계산해주면 된다.
+
+<details>
+<summary>정해</summary>
+<div markdown="1">
+
+```cpp
+#include <bits/stdc++.h>
+#define endl '\n'
+using namespace std;
+
+int n;
+vector<vector<int>> adj;
+vector<vector<int>> childs;
+int dfsorder[200100];
+int range[210000];
+int cntchild[200100];
+int cnt;
+long long precal[200100];
+
+int dfs(int here, int prev)
+{
+    dfsorder[here] = cnt++;
+    cntchild[here] = 1;
+    for(auto next : adj[here])
+    {
+        if(next != prev)
+        {
+            childs[here].push_back(next);
+            cntchild[here] += dfs(next, here);
+        }
+    }
+    for(auto next : adj[here])
+    {
+        if(next != prev)
+            precal[here] += (long long)(n-1-cntchild[next]) * (long long)cntchild[next];
+    }
+    int up = n - cntchild[here];
+    precal[here] += (long long)(n-1-up) * (long long)up;
+    precal[here] /= 2;
+    range[here] = dfsorder[here] + cntchild[here] - 1;
+    return cntchild[here];
+}
+
+int32_t main()
+{
+    cin.tie(0)->sync_with_stdio(0);
+    int q;
+    cin>>n>>q;
+    childs.resize(n+1, vector<int>());
+    adj.resize(n+1, vector<int>());
+    for(int i=0;i<n-1;++i)
+    {
+        int a, b;
+        cin>>a>>b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    dfs(1, 0);
+    int root = 1;
+    while(q--)
+    {
+        int a, x;
+        cin>>a>>x;
+        if(a == 1)
+        {
+            root = x;
+        }
+        else
+        {
+            long long except = 0;
+            if(dfsorder[x] < dfsorder[root] && dfsorder[root] <= range[x])
+            {
+                int low = 0;
+                int high = childs[x].size();
+                while(low < high)
+                {
+                    int mid = (low+high)/2;
+                    if(range[childs[x][mid]] < dfsorder[root])
+                    {
+                        low = mid + 1;
+                    }
+                    else
+                    {
+                        high = mid;
+                    }
+                }
+                except = childs[x].size() == 0 ? 0 : cntchild[childs[x][low]];
+            }
+            else if(dfsorder[root] == dfsorder[x])
+            {
+                except = 0;
+            }
+            else
+            {
+                except = n - cntchild[x];
+            }
+            cout<<precal[x] - except*(n-1-except) + n-1 - except<<endl;
+        }
+    }
+}
+```
+</div>
+</details>
