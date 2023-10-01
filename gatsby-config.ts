@@ -1,4 +1,6 @@
 import type { GatsbyConfig } from "gatsby";
+import math from 'remark-math';
+import katex from 'rehype-katex';
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -9,7 +11,13 @@ const config: GatsbyConfig = {
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
-  plugins: ["gatsby-plugin-sitemap", "gatsby-plugin-mdx", "gatsby-plugin-styled-components", {
+  plugins: [{
+      resolve: "gatsby-plugin-mdx",
+      options: {
+        remarkPlugins: [math],
+        rehypePlugins: [katex]
+      },
+    },"gatsby-plugin-sitemap", "gatsby-plugin-styled-components", {
     resolve: 'gatsby-source-filesystem',
     options: {
       "name": "pages",

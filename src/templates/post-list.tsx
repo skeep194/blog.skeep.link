@@ -93,7 +93,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
         size={limit} 
         navigateToPage={(pageNumber) => {
           if(pageNumber === 1){
-            navigate(`/page`); // 이걸로 갈거야? 수정 해~
+            navigate(`/main`);
           }
           else{
             navigate(`/page/${pageNumber}`);

@@ -25,8 +25,7 @@ external_url:
 <summary>정해</summary>
 <div markdown="1">
 
-````
-```cpp
+~~~cpp
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -83,8 +82,7 @@ int32_t main()
     sort(arr.begin(), arr.end());
     cout<<dp(0);
 }
-```
-````
+~~~
 </div>
 </details>
 
@@ -96,9 +94,7 @@ int32_t main()
 <details>
 <summary>정해</summary>
 <div markdown="1">
-
-````
-```cpp
+~~~cpp
 #include <bits/stdc++.h>
 using namespace std;
 #define endl '\n'
@@ -192,26 +188,23 @@ int32_t main()
         cout<<p[result[i]]<<endl;
     }
 }
-```
-````
+~~~
 </div>
 </details>
 
 # 어지러운 트리
 [https://www.acmicpc.net/problem/25973](https://www.acmicpc.net/problem/25973)
 
-트리 루트를 바꾸는 문제가 하나 더 있었는데 거기서 영감을 받아 만들었다. 루트가 바뀌지 않는다고 가정하고 2번 쿼리만 들어오면 가능한 경우의 수를 먼저 세어보자. cnt(x): 1을 루트로 하는 트리에서 x를 포함한 x의 자식 노드 개수라고 정의한다. 그렇다면 2 x 쿼리는 x의 직계 자식을 a_1 .. a_i 라고 했을 때 $$cnt(a_1) \times cnt(a_2) + cnt(a_1) \times cnt(a_3) + .. + cnt(a_{i-1}) \times cnt(a_i)$$ 가 된다. 이 식은 계산하는데 직계 자식의 개수 제곱이 걸릴 것 같아보이지만 다음과 같이 식정리를 하면 선형 시간에 계산 가능하다.
+트리 루트를 바꾸는 문제가 하나 더 있었는데 거기서 영감을 받아 만들었다. 루트가 바뀌지 않는다고 가정하고 2번 쿼리만 들어오면 가능한 경우의 수를 먼저 세어보자. cnt(x): 1을 루트로 하는 트리에서 x를 포함한 x의 자식 노드 개수라고 정의한다. 그렇다면 2 x 쿼리는 x의 직계 자식을 a_1 .. a_i 라고 했을 때 <MathBlock>{"cnt(a_1) \\times cnt(a_2) + cnt(a_1) \\times cnt(a_3) + .. + cnt(a_{i-1}) \\times cnt(a_i)"}</MathBlock> 가 된다. 이 식은 계산하는데 직계 자식의 개수 제곱이 걸릴 것 같아보이지만 다음과 같이 식정리를 하면 선형 시간에 계산 가능하다.
 
-$$cnt(a_1) \times (cnt(a_2)+..+cnt(a_i)) + cnt(a_2) \times (cnt(a_1)+cnt(a_3)+..+cnt(a_i)) + .. + cnt(a_i) \times (cnt(a_1) + .. cnt(a_{i-1}))$$
+<MathBlock math="cnt(a_1) \times (cnt(a_2)+..+cnt(a_i)) + cnt(a_2) \times (cnt(a_1)+cnt(a_3)+..+cnt(a_i)) + .. + cnt(a_i) \times (cnt(a_1) + .. cnt(a_{i-1}))"/>
 
 이제 이렇게 세는 아이디어를 토대로 1번 쿼리와 2번쿼리가 같이 들어온다고 가정해보자. 1번 노드를 루트로 하는 트리 기준으로 현재 루트가 x의 자식에 포함되지 않는다면 2번 쿼리도 변하지 않는다. 하지만 현재 루트가 x의 자식에 포함된다면 현재 루트에 속하는 경로에 있는 가지는 빼주고 x의 부모로 가는 가지를 추가해서 계산해주면 된다.
 
 <details>
 <summary>정해</summary>
 <div markdown="1">
-
-````
-```cpp
+~~~cpp
 #include <bits/stdc++.h>
 #define endl '\n'
 using namespace std;
@@ -306,7 +299,6 @@ int32_t main()
         }
     }
 }
-```
-````
+~~~
 </div>
 </details>

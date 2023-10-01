@@ -37,9 +37,8 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
   const numPages = Math.ceil(pageResult.data.allMdx.totalCount / postsPerPage);
 
   Array.from({ length: numPages }).forEach((_, i) => {
-    // 밑에 주소는 너 필요한대로 수정하셈
     createPage({
-      path: i === 0 ? `/page` : `/page/${i + 1}`,
+      path: i === 0 ? `/main` : `/page/${i + 1}`,
       component: path.resolve('./src/templates/post-list.tsx'),
       context: {
         limit: postsPerPage,
