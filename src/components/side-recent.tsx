@@ -2,10 +2,9 @@ import React from 'react';
 import { Link, useStaticQuery, graphql } from 'gatsby';
 
 const SideRecent: React.FC = () => {
-  // 여기서는 정적인 데이터를 사용했습니다. 실제로는 동적으로 가져와야 합니다.
   const data = useStaticQuery(graphql`
     query {
-      allMdx(limit: 5, sort: {fields: frontmatter___date, order: DESC}) {
+      allMdx(limit: 5, sort: {frontmatter: {date: DESC}}) {
         nodes {
           frontmatter {
             title
@@ -21,7 +20,7 @@ const SideRecent: React.FC = () => {
   return (
     <div className="side-recent">
       <h2 className="side-title">
-        <Link to="/recent">Recent Posts</Link>
+        <Link to="/">Recent Posts</Link>
       </h2>
       <hr />
       <ul>

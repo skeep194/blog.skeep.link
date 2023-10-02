@@ -214,7 +214,8 @@ body {
 }
 
 .header .menu { justify-content: center; align-items: center; }
-.header .site-title { text-align: center; }
+.header .site-title { text-align: center; color: #A83232; }
+.header .site-title:hover { color: #F64A4A; }
 
 @media (max-width: 767px) {
   .header .site-title {

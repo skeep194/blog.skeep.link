@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   // .Site.Menus.main에 해당하는 데이터. 실제로는 이 데이터를 동적으로 가져와야 합니다.
   const mainMenus = [
     { name: 'Home', url: '/', children: [] },
-    { name: 'Blog', url: '/blog', children: [] },
+    { name: 'About', url: '/about', children: [] },
     {
       name: 'Dropdown',
       url: '#',
@@ -19,8 +19,8 @@ const Header: React.FC = () => {
   return (
     <header className="header-wrapper">
       <div className="header">
-        <Link className="site-title" to="/"> {/* .Site.BaseURL에 해당하는 경로로 수정하세요. */}
-          Site Title {/* .Site.Title에 해당하는 값으로 수정하세요. */}
+        <Link className="site-title" to="/"> {}
+          RedMage {}
         </Link>
 
         <nav className="menu">

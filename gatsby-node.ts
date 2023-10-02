@@ -1,4 +1,4 @@
-import path from 'path';
+import path, { format } from 'path';
 import { GatsbyNode } from 'gatsby';
 import { createFilePath } from 'gatsby-source-filesystem';
 import reporter from 'gatsby-cli/lib/reporter';
@@ -7,12 +7,22 @@ export const onCreateNode: GatsbyNode['onCreateNode'] = ({ node, getNode, action
   const { createNodeField } = actions
   if (node.internal.type === `Mdx`) {
     const fileName: string = createFilePath({ node, getNode, basePath: `pages` })
-    const formattedSlug: string = fileName.replace(/\/(\d{4})-(\d{2})-(\d{2})-/, '/$1/$2/$3/')
+    const formattedSlug: string = fileName.replace(/\/(\d{1})-/, '/')
+    const nodeNum: number = parseInt(fileName.substring(1).split("-")[0])
+    if (Number.isNaN(nodeNum)) {
+      console.log("nodeNum should not be NaN")
+      reporter.panicOnBuild("nodeNum should not be NaN")
+    }
     createNodeField({
       node,
       name: `slug`,
       value: formattedSlug,
     });
+    createNodeField({
+      node,
+      name: `nodeNum`,
+      value: nodeNum
+    })
   }
 };
 
@@ -38,7 +48,7 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
 
   Array.from({ length: numPages }).forEach((_, i) => {
     createPage({
-      path: i === 0 ? `/main` : `/page/${i + 1}`,
+      path: i === 0 ? `/` : `/page/${i + 1}`,
       component: path.resolve('./src/templates/post-list.tsx'),
       context: {
         limit: postsPerPage,
@@ -50,11 +60,12 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
   });
   const postsResult = await graphql<Queries.createPostQuery>(`
   query createPost{
-    allMdx {
+    allMdx(sort: {fields: {nodeNum: DESC}}) {
       nodes {
         id
         fields {
           slug
+          nodeNum
         }
         internal {
           contentFilePath

@@ -15,7 +15,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
   const {limit, skip, numPages, currentPage} = pageContext;
   const data = useStaticQuery<Queries.postListQuery>(graphql`
     query postList {
-      allMdx {
+      allMdx(sort: {fields: {nodeNum: DESC}}) {
         edges {
           node {
             frontmatter {
@@ -27,6 +27,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
             excerpt
             fields {
               slug
+              nodeNum
             }
           }
         }
@@ -93,7 +94,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
         size={limit} 
         navigateToPage={(pageNumber) => {
           if(pageNumber === 1){
-            navigate(`/main`);
+            navigate(`/`);
           }
           else{
             navigate(`/page/${pageNumber}`);

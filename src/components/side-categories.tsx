@@ -2,11 +2,10 @@ import React from 'react';
 import { Link, useStaticQuery, graphql } from 'gatsby';
 
 const SideCategories: React.FC = () => {
-  // GraphQL 쿼리를 사용하여 카테고리 데이터를 가져옵니다.
   const data = useStaticQuery(graphql`
     query {
       allMdx {
-        group(field: frontmatter___categories) {
+        group(field: {frontmatter: {categories: SELECT}}) {
           fieldValue
           totalCount
         }

@@ -4,7 +4,6 @@ import { useLocation } from '@reach/router';
 import { useStaticQuery, graphql } from 'gatsby';
 
 const Head: React.FC = () => {
-  // 여기서는 정적인 데이터를 사용했습니다. 실제로는 동적으로 가져와야 합니다.
   const data = useStaticQuery(graphql`
     query {
       site {

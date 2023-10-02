@@ -1,11 +1,12 @@
 import type { GatsbyConfig } from "gatsby";
+import { remarkCodeHike } from "@code-hike/mdx";
 import math from 'remark-math';
 import katex from 'rehype-katex';
 
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `skeep194.github.io`,
-    siteUrl: `https://www.blog.skeep.link`
+    siteUrl: `https://www.skeep194.github.io`
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -14,8 +15,11 @@ const config: GatsbyConfig = {
   plugins: [{
       resolve: "gatsby-plugin-mdx",
       options: {
-        remarkPlugins: [math],
-        rehypePlugins: [katex]
+        extensions: [`.mdx`, `.md`],
+        mdxOptions: {
+          remarkPlugins: [[remarkCodeHike, {theme: "github-dark", lineNumbers: false}], math],
+          rehypePlugins: [katex]
+        }
       },
     },"gatsby-plugin-sitemap", "gatsby-plugin-styled-components", {
     resolve: 'gatsby-source-filesystem',
