@@ -5,8 +5,8 @@ import katex from 'rehype-katex';
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `skeep194.github.io`,
-    siteUrl: `https://www.skeep194.github.io`
+    title: `blog.skeep.link`,
+    siteUrl: `https://www.blog.skeep.link`
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -21,7 +21,7 @@ const config: GatsbyConfig = {
           rehypePlugins: [katex]
         }
       },
-    },"gatsby-plugin-sitemap", "gatsby-plugin-styled-components", {
+    },"gatsby-plugin-sitemap", {
     resolve: 'gatsby-source-filesystem',
     options: {
       "name": "pages",
@@ -35,7 +35,10 @@ const config: GatsbyConfig = {
       name: `markdown-pages`,
       path: `${__dirname}/pages/`,
     },
-  },]
+  },],
+  flags: {
+    DEV_SSR: true,
+  }
 };
 
 export default config;

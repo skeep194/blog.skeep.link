@@ -47,6 +47,7 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
   const numPages = Math.ceil(pageResult.data.allMdx.totalCount / postsPerPage);
 
   Array.from({ length: numPages }).forEach((_, i) => {
+    // 이거 main으로 안하고 /로 하고 index.tsx 날리면 야랄난다고? 에러메시지가 똑같은걸봐서는 그문제가 아닌거같음,,
     createPage({
       path: i === 0 ? `/` : `/page/${i + 1}`,
       component: path.resolve('./src/templates/post-list.tsx'),

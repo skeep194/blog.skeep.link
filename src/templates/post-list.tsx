@@ -4,6 +4,15 @@ import Pagination from '../components/pagination';
 import Layout from '../components/layout';
 
 
+function formatDate(isoDateString: string) {
+  const date = new Date(isoDateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // months are zero-based
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  return `${year}/${month}/${day}`;
+}
+
 interface PageContextProps {
   limit: number;
   skip: number;
@@ -50,10 +59,10 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
             <div className="tips">
               <div className="date">
               <time dateTime={node.frontmatter.date && typeof node.frontmatter.date === 'string'
-                ? new window.Date(node.frontmatter.date).toISOString()
+                ? formatDate(new Date(node.frontmatter.date).toISOString())
                 : ''}>
                 {node.frontmatter.date && typeof node.frontmatter.date === 'string'
-                  ? new window.Date(node.frontmatter.date).toLocaleDateString()
+                  ? formatDate(new Date(node.frontmatter.date).toISOString())
                   : 'Invalid Date'}
               </time>
               </div>
