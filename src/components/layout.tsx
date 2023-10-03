@@ -8,7 +8,6 @@ import SideTags from './side-tags';
 import 'katex/dist/katex.min.css';
 
 const Layout: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  // 여기서 html 떼면 될려나
   return (
     <div className='layout-wrapper'>
       <Head/>

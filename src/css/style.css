@@ -128,19 +128,13 @@ html {
   width: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   align-items: center;
+  background-color: var(--color-bg-page);
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-
-  min-height: 100vh;
   margin: 0;
-
-  align-items: center;
-
-  background-color: var(--color-bg-page);
 }
 
 /* set up padding and margin of some main elements */
@@ -200,7 +194,7 @@ body {
 /* size the element who has breakpoint limitation */
 /* .header, .main-wrapper, .main { width: 100vw; } */
 /* .header-wrapper, .footer { width: 100vw; } */
-.header-wrapper, .footer { width: 100vw;}
+.header-wrapper, .footer { width: 100%;}
 .main-wrapper { width: calc(100vw - 2 * var(--len-3));}
 
 /************************/
