@@ -45,7 +45,7 @@ const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,child
     <h1>{data.mdx.frontmatter.title}</h1>
     <p>{data.mdx.frontmatter.date}</p>
     <MDXProvider components={components}>{children}</MDXProvider>
-    <Utterances repo='skeep194/blog.skeep.link' theme='github-dark'/>
+    <Utterances repo='skeep194/blog.skeep.link' theme='preferred-color-scheme'/>
   </Layout>
 );
 
