@@ -6,6 +6,7 @@ import { MDXProvider } from "@mdx-js/react";
 import Layout from '../components/layout';
 import 'katex/dist/katex.min.css';
 import { MathBlock } from '../components/Mathblock';
+import Utterances from '../components/Utterances';
 
 
 
@@ -44,6 +45,7 @@ const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,child
     <h1>{data.mdx.frontmatter.title}</h1>
     <p>{data.mdx.frontmatter.date}</p>
     <MDXProvider components={components}>{children}</MDXProvider>
+    <Utterances repo='skeep194/blog.skeep.link' theme='github-dark'/>
   </Layout>
 );
 
