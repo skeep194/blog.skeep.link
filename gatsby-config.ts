@@ -35,7 +35,14 @@ const config: GatsbyConfig = {
       name: `markdown-pages`,
       path: `${__dirname}/pages/`,
     },
-  },],
+  },
+  {
+    resolve: 'gatsby-plugin-google-gtag',
+    options: {
+      trackingIds: ["6254151009"]
+    }
+  }
+  ],
   flags: {
     DEV_SSR: true,
   }
