@@ -19,30 +19,41 @@ const config: GatsbyConfig = {
         mdxOptions: {
           remarkPlugins: [[remarkCodeHike, {theme: "github-dark", lineNumbers: false}], math],
           rehypePlugins: [katex]
-        }
+        },
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1200,
+            },
+          },
+        ],
       },
     },"gatsby-plugin-sitemap", {
     resolve: 'gatsby-source-filesystem',
     options: {
       "name": "pages",
-      "path": "./src/pages/"
+      "path": `${__dirname}/pages/`
     },
     __key: "pages"
   },    
-  {
-    resolve: `gatsby-source-filesystem`,
-    options: {
-      name: `markdown-pages`,
-      path: `${__dirname}/pages/`,
-    },
-  },
   {
     resolve: 'gatsby-plugin-google-gtag',
     options: {
       trackingIds: ["G-N2CEM3WYG4"]
     }
-  }
+  },
+  `gatsby-plugin-sharp`,
+  `gatsby-transformer-sharp`,
+  `gatsby-plugin-image`,
+  {
+    resolve: `gatsby-source-filesystem`,
+    options: {
+      path: `${__dirname}/images`,
+    },
+  },
   ],
+
   flags: {
     DEV_SSR: true,
   }
