@@ -1,0 +1,67 @@
+---
+title: 개츠비 블로그 MDX 파일 이미지 넣기
+tags: [react, gatsby]
+categories: [blog]
+date: 2023-10-09
+---
+## 먼저 공식 DOCS를 읽어봅시다
+[https://www.gatsbyjs.com/docs/how-to/images-and-media/working-with-images-in-markdown/](https://www.gatsbyjs.com/docs/how-to/images-and-media/working-with-images-in-markdown/)
+
+개츠비는 jakyll과 달리 기본 설정만으로는 md파일에 이미지를 넣어도 작동하지 않았다. 이유를 찾아봤는데 그냥 플러그인 설치만 하면 된다고 한다.
+
+## 기본 설치
+먼저 필요한 플러그인을 설치해주자.
+``` shell
+npm install gatsby-plugin-image gatsby-plugin-sharp gatsby-source-filesystem gatsby-transformer-sharp npm install gatsby-remark-images
+```
+
+## 어떻게 돌아가는건데?
+공식 문서에 따르면 md파일에서의 이미지 처리 방법을 크게 두 가지로 나누고 있다.
+1. 페이지 맨 위에 보이는 이미지(블로그 썸네일?)는 md파일 frontmatter에 이미지 파일 이름을 설정하고 gatsby-plugin-sharp가 GraphQL쿼리를 사용해서 변환해준다고 나와있다.
+2. inline image(md파일에서 직접 사용)은 gatsby-remark-images 플러그인을 사용할 수 있도록 gatsby-config 파일을 수정해준다.
+
+## inline 이미지 적용
+일단 급한건 포스트에 이미지를 넣는 부분이므로 2번 방법을 사용해서 설정해줬다.
+mdx파일을 처리하는 플러그인이 gatsby-transformer-remark인지 gatsby-plugin-mdx인지에 따라 설정 내용이 달라지는데 나는 gatsby-plugin-mdx를 사용하고 있다.
+gatsgby-transformer-remark의 경우는 직접 DOCS 하단의 Using gatsby-remark-images 부분을 읽어보자.
+
+사용하는 gatsby-config.ts 파일에 아래 부분을 추가해주자.
+
+<CH.Code>
+``` typescript gatsby-config.ts
+plugins: [
+  //원래 있던 플러그인들
+  `gatsby-plugin-sharp`,
+  `gatsby-transformer-sharp`,
+  `gatsby-plugin-image`,
+  {
+    resolve: `gatsby-source-filesystem`,
+    options: {
+      path: `${__dirname}/images`,
+    },
+  },
+  {
+    resolve: `gatsby-plugin-mdx`,
+    options: {
+      gatsbyRemarkPlugins: [
+        {
+          resolve: `gatsby-remark-images`,
+          options: {
+             maxWidth: 1200,
+          },
+        },
+      ],
+    },
+  },
+]
+```
+</CH.Code>
+
+path 부분은 이미지 파일이 들어갈 경로로 수정하면 된다.
+
+## 완성!
+이제 md파일 안에서 이미지 문법을 사용할 수 있다.
+```md
+![example](../images/9/ueong.jpg)
+```
+![example](../images/9/ueong.jpg)
