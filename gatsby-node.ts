@@ -7,7 +7,8 @@ export const onCreateNode: GatsbyNode['onCreateNode'] = ({ node, getNode, action
   const { createNodeField } = actions
   if (node.internal.type === `Mdx`) {
     const fileName: string = createFilePath({ node, getNode, basePath: `pages` })
-    const formattedSlug: string = fileName.replace(/\/(\d{1})-/, '/')
+    console.log(fileName)
+    const formattedSlug: string = fileName.replace(/\/(\d+)-/, '/')
     const nodeNum: number = parseInt(fileName.substring(1).split("-")[0])
     if (Number.isNaN(nodeNum)) {
       console.log("nodeNum should not be NaN")
