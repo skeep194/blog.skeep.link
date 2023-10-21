@@ -56,12 +56,17 @@ const config: GatsbyConfig = {
   {
     resolve: `gatsby-plugin-manifest`,
     options: {
-      name: "RedMage",
-      short_name: "RedMage",
-      start_url: "/",
-      
-    }
-  }
+      name: `RedMage`,
+      short_name: `RedMage`,
+      description: `RedMage is final fantasy hybrid class. My goal is to study wide range tech like RedMage`,
+      start_url: `/`,
+      background_color: `#f7f0eb`,
+      theme_color: `#a2466c`,
+      display: `standalone`,
+      icon: `images/icon.png`
+    },
+  },
+  `gatsby-plugin-offline`
   ],
 
   flags: {
