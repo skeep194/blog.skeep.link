@@ -22,7 +22,7 @@ interface PageContextProps {
 
 const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
   const {limit, skip, numPages, currentPage} = pageContext;
-  const data = useStaticQuery<Queries.postListQuery>(graphql`
+  const query = useStaticQuery<Queries.postListQuery>(graphql`
     query postList {
       allMdx(sort: {fields: {nodeNum: DESC}}) {
         edges {
@@ -43,11 +43,12 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
       }
     }
   `);
+  const data = query.allMdx.edges.slice(skip, skip+limit);
 
   return (
     <Layout>
     <div className="max-wrapper">
-      {data.allMdx.edges.map(({ node }, uniqueKey) => {
+      {data.map(({ node }, uniqueKey) => {
         if (!node.fields?.slug || !node.frontmatter?.title || !node.frontmatter?.date)
           return <div key={uniqueKey}>Cannot query required fields</div>;
 
