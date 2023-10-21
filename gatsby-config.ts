@@ -5,8 +5,9 @@ import katex from 'rehype-katex';
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `blog.skeep.link`,
-    siteUrl: `https://www.blog.skeep.link`
+    title: `RedMage`,
+    siteUrl: `https://www.blog.skeep.link`,
+    favicon: ``
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
@@ -52,6 +53,15 @@ const config: GatsbyConfig = {
       path: `${__dirname}/images`,
     },
   },
+  {
+    resolve: `gatsby-plugin-manifest`,
+    options: {
+      name: "RedMage",
+      short_name: "RedMage",
+      start_url: "/",
+      
+    }
+  }
   ],
 
   flags: {

@@ -7,6 +7,7 @@ import Layout from '../components/layout';
 import 'katex/dist/katex.min.css';
 import { MathBlock } from '../components/Mathblock';
 import Utterances from '../components/Utterances';
+import { Helmet } from 'react-helmet';
 
 
 
@@ -42,6 +43,7 @@ interface BlogPostProps {
 
 const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,children }) => (
   <Layout>
+    <Helmet title={data.mdx.frontmatter.title} />
     <h1>{data.mdx.frontmatter.title}</h1>
     <p>{data.mdx.frontmatter.date}</p>
     <MDXProvider components={components}>{children}</MDXProvider>
