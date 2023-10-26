@@ -26,7 +26,7 @@ const Head: React.FC = () => {
       <title>{title}</title>
       <link rel="canonical" href={`${siteUrl}${pathname}`} />
       <meta name="description" content={description} />
-      <meta property="og:type" content="article" />
+      <meta property="og:type" content="blog" />
       <meta property="og:title" content={title} />
       <meta property="og:url" content={`${siteUrl}${pathname}`} />
       <meta property="og:description" content={description} />
