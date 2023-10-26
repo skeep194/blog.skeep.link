@@ -25,6 +25,7 @@ const Head: React.FC = () => {
       <meta name="viewport" content="width=device-width,minimum-scale=1" />
       <title>{title}</title>
       <link rel="canonical" href={`${siteUrl}${pathname}`} />
+      <meta name="naver-site-verification" content="b0d1c97bfa92bc9b3e8775a6128ef79196cb0fb2" />
       <meta name="description" content={description} />
       <meta property="og:type" content="blog" />
       <meta property="og:title" content={title} />

@@ -66,7 +66,15 @@ const config: GatsbyConfig = {
       icon: `images/icon.png`
     },
   },
-  `gatsby-plugin-offline`
+  `gatsby-plugin-offline`,
+  {
+    resolve: 'gatsby-plugin-robots-txt',
+    options: {
+      host: 'https://blog.skeep.link',
+      sitemap: 'https://blog.skeep.link/sitemap.xml',
+      policy: [{userAgent: '*', allow: '/'}]
+    }
+  }
   ],
 
   flags: {
