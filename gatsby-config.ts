@@ -7,7 +7,7 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: `RedMage`,
     siteUrl: `https://www.blog.skeep.link`,
-    descripion: `RedMage is final fantasy hybrid class. My goal is to study wide range tech like RedMage`,
+    description: `RedMage is final fantasy hybrid class. My goal is to study wide range tech like RedMage`,
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin

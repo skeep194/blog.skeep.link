@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'gatsby';
 
 const Header: React.FC = () => {
-  // .Site.Menus.main에 해당하는 데이터. 실제로는 이 데이터를 동적으로 가져와야 합니다.
   const mainMenus = [
     { name: 'Home', url: '/', children: [] },
     { name: 'About', url: '/about', children: [] },

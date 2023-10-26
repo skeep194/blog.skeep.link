@@ -8,6 +8,7 @@ import 'katex/dist/katex.min.css';
 import { MathBlock } from '../components/Mathblock';
 import Utterances from '../components/Utterances';
 import { Helmet } from 'react-helmet';
+import SEO from '../components/seo';
 
 
 
@@ -52,3 +53,7 @@ const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,child
 );
 
 export default BlogPost;
+
+export const Head = ({ data }: BlogPostProps) => {
+  return <SEO title={data.mdx.frontmatter.title} />
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql, useStaticQuery, Link,PageProps,navigate } from 'gatsby';
 import Pagination from '../components/pagination';
 import Layout from '../components/layout';
+import SEO from '../components/seo';
 
 
 function formatDate(isoDateString: string) {
@@ -119,3 +120,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
 
 
 export default PostList;
+
+export const Head = () => {
+  return <SEO />
+}
