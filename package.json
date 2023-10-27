@@ -37,7 +37,6 @@
     "katex": "^0.16.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-helmet": "^6.1.0",
     "rehype-katex": "^5.0.0",
     "remark-html-katex": "^4.0.1",
     "remark-math": "^3.0.1"

@@ -19,10 +19,10 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-row">
-        Copyright 2023 ©<Link to="https://github.com/skeep194">skeep194</Link>, built with&nbsp;<Link to="https://github.com/kasterra">kasterra</Link>
+        Copyright 2023 ©<a href="https://github.com/skeep194">skeep194</a>, built with&nbsp;<a href="https://github.com/kasterra">kasterra</a>
       </div>
       <div className="footer-row">
-        from&nbsp;<Link to="https://github.com/leafee98/hugo-theme-flat">hugo-theme-flat</Link>&nbsp;migrate gatsby
+        from&nbsp;<a href="https://github.com/leafee98/hugo-theme-flat">hugo-theme-flat</a>&nbsp;migrate gatsby
       </div>
     </footer>
   );
