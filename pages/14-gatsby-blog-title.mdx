@@ -1,0 +1,86 @@
+---
+title: 개츠비 head API 알아보기(helmet은 이제 안녕)
+tags: [react, gatsby]
+categories: [blog]
+date: 2023-10-29
+---
+## react Helmet
+사이트의 head 태그에는 open graph 등 여러 메타데이터가 들어가는데 리액트에서는 head태그 밑이 아니어도 head정보를 바꿀 수 있게 `helmet`이라는 라이브러리가 있다.
+
+이는 동적으로 head 정보를 바꾸는데 유용하지만 CSR이라는 단점이 있다. 심지어 네이버 검색 엔진은 CSR로 된 head 태그를 읽지 못했다.
+
+개츠비에서는 `helmet` 대신 `gatsby head API`를 이용해서 SSR로 head만 따로 설정할 수 있다. 이제 `Helmet`과는 작별인사를 하자.
+
+## gatsby head API
+나는 공식문서에 광적으로 집착하는 사람이므로 이번에도 공식문서를 읽어보는 걸 추천한다. [https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/](https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/)
+
+첫 문단부터 `react-helmet`에 비해 사용하기 쉽고 더 효율적이라고 한다. gatsby head를 어떻게 적용하는지에 대해 알아보자.
+
+사실, 너무 쉽다. 그냥 렌더링 되는 페이지에 `Head`라는 함수를 `export`하기만 하면 된다.
+
+```ts
+import * as React from "react"
+
+export function Head() {
+    return (
+        <title>페이지의 타이틀이 바뀐다!</title>
+    )
+}
+```
+
+와 정말 간단하다. 이렇게 간단한 방법을 놔두고 왜 `helmet`을 사용하는가? 앞으로 개츠비에서 head데이터를 바꿔야 한다면 `gatsby head API`를 적극 이용하자.
+
+## 주의점
+`Head` 함수를 `export`하는 곳은 컴포넌트가 아닌 실제 렌더링 되는 페이지여야 한다. 이는 `gatsby-node.ts`파일에서 `createPage`함수로 렌더링 한 파일을 의미한다.
+
+예를 들면 이 블로그의 각 포스트 페이지를 만드는 부분은 아래와 같이 되어있다.
+
+```ts
+posts.forEach(node => {
+    if(!node.fields?.slug || !node.internal.contentFilePath){
+      reporter.panicOnBuild("something wrong when generating page")
+      return;
+    }
+    createPage({
+      path: node.fields.slug,
+      component: `${path.resolve('./src/templates/blog-post.tsx')}?__contentFilePath=${node.internal.contentFilePath}`,
+      context: { id: node.id },
+    })
+  })
+};
+```
+
+`createPage`로 `src/templates/blog-post.tsx`를 렌더링 하고 있으니 이 파일 안에서는 `gatsby head API`를 사용할 수 있다.
+
+## 동적으로 타이틀 설정하기
+`helmet`을 사용할 때는 `graphQL`을 `export`해서 페이지 별로 데이터를 받아와 사용할 수 있었다. 물론 `gatsby head API`도 같은 방식으로 가능하다.
+
+```tsx
+interface BlogPostProps {
+  data: {
+    mdx: {
+      body: string;
+      frontmatter: {
+        title: string;
+        date: string;
+      };
+    };
+  };
+}
+export const query = graphql`
+  query($id: String!) {
+    mdx(id: { eq: $id }) {
+      body
+      frontmatter {
+        title
+        date(formatString: "YYYY-MM-DD")
+      }
+    }
+  }
+`
+export const Head = ({ data }: BlogPostProps) => {
+  return <SEO title={data.mdx.frontmatter.title} />
+}
+```
+
+이 블로그에 설정된 타이틀 예시를 가져와봤다. `SEO` 컴포넌트는 따로 만든 리액트 컴포넌트다. 쿼리를 `export`하고 `Head`함수의 파라미터로 설정하기만 하면 된다. 끝.
