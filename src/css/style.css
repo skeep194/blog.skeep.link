@@ -57,6 +57,17 @@
   --color-bg-pager-hover:           var(--color-light-bg-pager-hover);
 }
 
+.inline-code {  
+  color: #e74c3c;
+  background: #efefef;
+  border-radius: 6px;
+  padding: 2.5px 5px;
+}
+
+code {
+  font-family: consolas, courier, monospace;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg-page:                var(--color-dark-bg-page);
@@ -75,6 +86,12 @@
     --color-bg-pager-normal:        var(--color-dark-bg-pager-normal);
     --color-bg-pager-current:       var(--color-dark-bg-pager-current);
     --color-bg-pager-hover:         var(--color-dark-bg-pager-hover);
+  }
+  .inline-code {  
+    color: #ffbe85;
+    background: #161f27;
+    border-radius: 6px;
+    padding: 2.5px 5px;
   }
 }
 

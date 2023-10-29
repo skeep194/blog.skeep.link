@@ -8,11 +8,13 @@ import 'katex/dist/katex.min.css';
 import { MathBlock } from '../components/Mathblock';
 import Utterances from '../components/Utterances';
 import SEO from '../components/seo';
+import InlineCode from '../components/InlineCode';
 
 
 
 const components = {
   MathBlock,
+  code: InlineCode
 };
 
 
