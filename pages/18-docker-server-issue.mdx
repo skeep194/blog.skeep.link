@@ -1,0 +1,92 @@
+---
+title: docker-compose로 서버 배포해보면서 마주한 이슈와 해결과정
+tags: [docker]
+categories: [trouble_shooting]
+date: 2023-11-08
+---
+## 개요
+간단한 백엔드 애플리케이션을 만들었다. 백엔드에서는 db로 데이터를 주고 받는다.
+
+## 로컬에서는
+개발할 때 로컬에서 일단은 서버를 고려하지 않고 막 했다.. db 비밀번호도 그냥 막 상수로 넣어다니고 `hostname`도 그냥 `localhost` 적어놓고 어쨌든 이걸 서버로 옮기는 과정에서 몇 가지 문제가 발생했다.
+
+## 민감한 정보
+일단 이 프로젝트는 `public`으로 `git`에 올라가있다. [https://github.com/skeep194/owl-webtoon](https://github.com/skeep194/owl-webtoon)
+
+실제 서버 배포를 할 때 db 비밀번호같은 민감한 정보는 올려버리면 안되니까 몇 가지 방법이 있었다.
+
+### 설정 파일 만들고 .gitignore 하기
+프로젝트 루트 폴더에 `auth.config.json`같은 파일을 하나 만들고 거기에 민감한 정보를 다 넣은 뒤 `.gitignore`로 무시해버릴 수 있다.
+
+이 방법은 간단하지만 후술할 `docker`위에 프로젝트를 올리는 과정에서 이 파일을 활용할 수 없다는 단점이 있었다.
+
+### 환경변수로 넣어주기
+필요한 환경변수를 미리 설정해주고 프로그램에서 받아오는 방법이다. `git secret`으로 환경 변수 설정 자동화를 할 수 있는 것 같은데 다음에 적용시켜서 포스팅해봐야겠다.
+
+이 방법은 `docker-compose.yml`에서도 환경변수를 활용할 수 있어서 채택했다.
+
+## sudo
+`sudo`는 일시적으로 관리자 권한으로 실행하는 리눅스 명령어다. 배포할 서버에 `docker-compose`를 돌리니까 관리자 권한이 필요해서 `sudo docker-compose up`이라고 했는데 환경변수가 없어졌다.
+
+현재 사용자가 아닌 관리자 라는 다른 사용자가 명령을 실행하는 방식이라 `sudo`를 쓸 때 현재 계정에만 적용되는 환경변수는 무시된다.
+
+이를 가지고 가려면 `sudo -E`로 옵션을 주면 된다. 그래서 `sudo -E docker-compose up`을 하니까 현재 계정에 있는 환경변수를 잘 들고 갔다.
+
+## 컨테이너간 통신
+아까 db에 접속할 때 `hostname`을 그냥 `localhost`를 적었다고 했는데 `docker`에 올리면 `localhost`는 컨테이너 안이 되어버린다.
+
+db 컨테이너와 백엔드 컨테이너는 다른 컨테이너라서 `localhost`로 할 수 없고 컨테이너에 할당되는 ip를 적어줘야 한다.
+
+`docker inspect {container_id}` 명령어로 컨테이너에 할당된 ip를 확인할 수 있다.
+
+`docker-compose`를 사용하는 경우 같은 `docker-compose`간에는 `services`에 적어준 이름으로 `hostname`을 설정하면 된다. 이 때 포트는 외부 접속이 아니라 컨테이너 내부 포트를 적어줘야 한다.
+
+아래는 내가 설정한 `docker-compose` 파일이다. 이 서버는 `golang` 이미지로 백엔드를 먼저 빌드하고 `db`컨테이너와 `backend`컨테이너를 올려서 `backend`가 `db`에 접속한다.
+
+```yml docker-compose.yml
+version: '3.7'
+services:
+  owl-webtoon-backend:
+    image: ubuntu:22.04
+    ports:
+      - "${OWL_BACK_PORT}:3000"
+    depends_on:
+      owl-webtoon-build:
+        condition: service_completed_successfully
+      owl-webtoon-db:
+        condition: service_started
+        restart: true
+    environment:
+      - DB_HOST_NAME=owl-webtoon-db
+      - DB_USER_NAME=${OWL_DB_USER_NAME}
+      - DB_PASSWORD=${OWL_DB_PASSWORD}
+      - DB_DATABASE=${OWL_DB_DATABASE}
+      - DB_PORT=5432
+    command: ['owl_webtoon']
+    working_dir: /bin
+    volumes:
+      - ./bin:/bin
+  owl-webtoon-db:
+    image: postgres:16
+    ports:
+      - "${OWL_DB_PORT}:5432"
+    environment:
+      - POSTGRES_PASSWORD=${OWL_POSTGRES_PASSWORD}
+      - POSTGRES_USER=${OWL_POSTGRES_USER}
+      - POSTGRES_DB=${OWL_POSTGRES_DB}
+      - OWL_DB_PASSWORD=${OWL_DB_PASSWORD}
+    volumes:
+      - ./owl-data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+  owl-webtoon-build:
+    image: golang:1.18.1
+    working_dir: /owl
+    command: ['bash', '/owl/build.sh']
+    volumes:
+      - .:/owl
+```
+
+`backend` 컨테이너의 환경변수로 준 `DB_HOST_NAME=owl-webtoon-db`에 주목하자. 이 이름은 `docker-compose.yml`의 `services`에서 나온 이름이다.
+
+## 결론
+도커 컨테이너는 컨테이너 별로 다른 네트워크를 가지고 있고 같은 `docker-compose` 안에서는 같은 네트워크 안에서 동작하는데 `services`명이 `hostname`이 된다.
