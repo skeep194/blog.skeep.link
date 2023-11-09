@@ -453,7 +453,7 @@ body {
     line-height: 1.5;
 }
 
-.content code {
+/* .content code {
   font-family: var(--fonts-mono);
 
   background-color: var(--color-bg-block);
@@ -463,12 +463,12 @@ body {
   border-radius: 2px;
   line-height: inherit;
   word-wrap: break-word;
-}
+} */
 
 /* keep in style with highlighting */
 .content pre { padding: 7px; }
 
-.content pre code {
+/* .content pre code {
   display: block;
 
   padding: var(--len-3);
@@ -479,7 +479,7 @@ body {
 
   overflow: auto;
   width: 100%;
-}
+} */
 
 .content blockquote {
   margin-top: 5px;
