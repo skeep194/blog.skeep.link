@@ -45,9 +45,14 @@ interface BlogPostProps {
 
 const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,children }) => (
   <Layout>
-    <h1>{data.mdx.frontmatter.title}</h1>
-    <p>{data.mdx.frontmatter.date}</p>
-    <MDXProvider components={components}>{children}</MDXProvider>
+    <section className='single'>
+      <h1>{data.mdx.frontmatter.title}</h1>
+      <p>{data.mdx.frontmatter.date}</p>
+      <hr/>
+      <div className='content'>
+        <MDXProvider components={components}>{children}</MDXProvider>
+      </div>
+    </section>
     <Utterances repo='skeep194/blog.skeep.link' theme='preferred-color-scheme'/>
   </Layout>
 );
