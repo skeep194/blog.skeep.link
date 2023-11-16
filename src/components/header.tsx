@@ -4,15 +4,7 @@ import { Link } from 'gatsby';
 const Header: React.FC = () => {
   const mainMenus = [
     { name: 'Home', url: '/', children: [] },
-    { name: 'About', url: '/about', children: [] },
-    {
-      name: 'Dropdown',
-      url: '#',
-      children: [
-        { name: 'Submenu1', url: '/submenu1' },
-        { name: 'Submenu2', url: '/submenu2' },
-      ],
-    },
+    // { name: 'About', url: '/about', children: [] },
   ];
 
   return (

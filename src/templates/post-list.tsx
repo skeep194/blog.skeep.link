@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, useStaticQuery, Link,PageProps,navigate } from 'gatsby';
+import { graphql, useStaticQuery, Link,PageProps } from 'gatsby';
 import Pagination from '../components/pagination';
 import Layout from '../components/layout';
 import SEO from '../components/seo';
@@ -68,7 +68,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
                   : 'Invalid Date'}
               </time>
               </div>
-              {node.frontmatter.categories && (
+              {/* TODO: 카테고리는 시리즈로 바꾸기 {node.frontmatter.categories && (
                 <div className="categories">
                   <span>Categories:</span>
                   {node.frontmatter.categories
@@ -80,7 +80,7 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
                       </Link>
                     ))}
                 </div>
-              )}
+              )} */}
               {node.frontmatter.tags && (
                 <div className="tags">
                   <span>Tags:</span>
@@ -99,19 +99,10 @@ const PostList: React.FC<PageProps<{}, PageContextProps>> = ({pageContext}) => {
           </section>
         );
       })}
-            <Pagination 
+        <Pagination 
         current={currentPage} 
         total={numPages} 
-        size={limit} 
-        navigateToPage={(pageNumber) => {
-          if(pageNumber === 1){
-            navigate(`/`);
-          }
-          else{
-            navigate(`/page/${pageNumber}`);
-          }
-        }} 
-      />
+        size={limit} />
     </div>
     </Layout>
   );

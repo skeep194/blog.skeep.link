@@ -1,15 +1,26 @@
+import { Link, navigate } from 'gatsby';
 import React from 'react';
+
 
 interface PaginationProps {
   current: number;
   total: number;
   size: number;
-  navigateToPage: (pageNumber: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ current, total, size, navigateToPage }) => {
-  const pages = Array.from({ length: total }, (_, i) => i + 1);
 
+
+
+const Pagination: React.FC<PaginationProps> = ({ current, total, size }) => {
+  const pages = Array.from({ length: total }, (_, i) => i + 1);
+  const navigateToPage=(pageNumber: number) => {
+    if(pageNumber === 1){
+      navigate(`/`);
+    }
+    else{
+      navigate(`/page/${pageNumber}`);
+    }
+  }
   return (
     <nav className="pagination">
       {pages.map((pageNumber) => {
@@ -21,12 +32,12 @@ const Pagination: React.FC<PaginationProps> = ({ current, total, size, navigateT
           return (
             <React.Fragment key={pageNumber}>
               {pageNumber !== pages[0] && <span>··</span>}
-              <a
+              <button
                 className={`enabled ${pageNumber === current ? 'current' : ''}`}
                 onClick={() => navigateToPage(pageNumber)}
               >
                 {pageNumber}
-              </a>
+              </button>
             </React.Fragment>
           );
         }

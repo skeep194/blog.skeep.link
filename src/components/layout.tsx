@@ -18,7 +18,7 @@ const Layout: React.FC<PropsWithChildren<{}>> = ({ children }) => {
           
           <div className="side">
           <SideRecent/>
-          <SideCategories/>
+          {/* TODO: 카테고리는 시리즈로 바꾸기 <SideCategories/> */}
           <SideTags/>
           </div>
         </main>

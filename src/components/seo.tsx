@@ -33,7 +33,7 @@ const SEO: React.FC<PropsWithChildren<SEOProps>> = ({ title, description, childr
     <>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width,minimum-scale=1" />
-      <meta http-equiv="content-language" content="ko" />
+      <meta httpEquiv="content-language" content="ko" />
       <title>{seo.title}</title>
       <link rel="canonical" href={`${seo.url}${pathname}`} />
       <meta name="naver-site-verification" content="b0d1c97bfa92bc9b3e8775a6128ef79196cb0fb2" />

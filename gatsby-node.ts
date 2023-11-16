@@ -60,49 +60,70 @@ export const createPages: GatsbyNode['createPages'] = async ({ graphql, actions 
     });
   });
   const postsResult = await graphql<Queries.createPostQuery>(`
-  query createPost{
-    allMdx(sort: {fields: {nodeNum: DESC}}) {
-      nodes {
-        id
-        fields {
-          slug
-          nodeNum
-        }
-        internal {
-          contentFilePath
+    query createPost{
+      allMdx(sort: {fields: {nodeNum: DESC}}) {
+        nodes {
+          id
+          fields {
+            slug
+            nodeNum
+          }
+          internal {
+            contentFilePath
+          }
         }
       }
     }
+  `)
+  if (postsResult.errors) {
+    reporter.panicOnBuild('Error loading MDX result', pageResult.errors)
   }
-`)
-if (postsResult.errors) {
-  reporter.panicOnBuild('Error loading MDX result', pageResult.errors)
-}
 
-// Create blog post pages.
-const posts = postsResult.data?.allMdx.nodes
+  // Create blog post pages.
+  const posts = postsResult.data?.allMdx.nodes
 
-if(!posts) {
-  reporter.panicOnBuild("something wrong with posts");
-  return;
-}
-
-// 각 포스트 페이지 생성
-posts.forEach(node => {
-  if(!node.fields?.slug || !node.internal.contentFilePath){
-    reporter.panicOnBuild("something wrong when generating page")
+  if(!posts) {
+    reporter.panicOnBuild("something wrong with posts");
     return;
   }
-  createPage({
-    // As mentioned above you could also query something else like frontmatter.title above and use a helper function
-    // like slugify to create a slug
-    path: node.fields.slug,
-    // Provide the path to the MDX content file so webpack can pick it up and transform it into JSX
-    component: `${path.resolve('./src/templates/blog-post.tsx')}?__contentFilePath=${node.internal.contentFilePath}`,
-    // You can use the values in this context in
-    // our page layout component
-    context: { id: node.id },
-  })
-})
 
+  // 각 포스트 페이지 생성
+  posts.forEach(node => {
+    if(!node.fields?.slug || !node.internal.contentFilePath){
+      reporter.panicOnBuild("something wrong when generating page")
+      return;
+    }
+    createPage({
+      // As mentioned above you could also query something else like frontmatter.title above and use a helper function
+      // like slugify to create a slug
+      path: node.fields.slug,
+      // Provide the path to the MDX content file so webpack can pick it up and transform it into JSX
+      component: `${path.resolve('./src/templates/blog-post.tsx')}?__contentFilePath=${node.internal.contentFilePath}`,
+      // You can use the values in this context in
+      // our page layout component
+      context: { id: node.id },
+    })
+  })
+  // 태그 페이지 생성
+  const tags = await graphql<Queries.createTagPagesQuery>(`
+    query createTagPages {
+      allMdx {
+        group(field: {frontmatter: {tags: SELECT}}) {
+          fieldValue
+          totalCount
+        }
+      }
+    }
+  `);
+  tags.data?.allMdx.group.forEach(node => {
+    if(!node.fieldValue) {
+      reporter.panicOnBuild("tag page build fail not exist fieldValue")
+      return
+    }
+    createPage({
+      path: `/tags/${node.fieldValue}`,
+      component: `${path.resolve('./src/templates/tag.tsx')}`,
+      context: { tag: node.fieldValue }
+    })
+  })
 };
