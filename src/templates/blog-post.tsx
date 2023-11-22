@@ -1,7 +1,7 @@
 // src/templates/blog-post.tsx
 
 import React,{FC} from 'react';
-import { graphql } from 'gatsby';
+import { Link, graphql } from 'gatsby';
 import { MDXProvider } from "@mdx-js/react";
 import Layout from '../components/layout';
 import 'katex/dist/katex.min.css';
@@ -26,6 +26,7 @@ export const query = graphql`
       frontmatter {
         title
         date(formatString: "YYYY-MM-DD")
+        tags
       }
     }
   }
@@ -47,6 +48,21 @@ const BlogPost: React.FC<React.PropsWithChildren<BlogPostProps>> = ({ data,child
   <Layout>
     <section className='single'>
       <h1>{data.mdx.frontmatter.title}</h1>
+      <div className='list-item' style={{borderBottom: 0}}>
+      {data.mdx.frontmatter.tags && (
+                <div className="tags">
+                  {data.mdx.frontmatter.tags
+                    .filter((tag): tag is string => tag !== null)
+                    .slice(0, 5)
+                    .map((tag: string) => (
+                      <Link key={tag} to={`/tags/${tag}`}>
+                        {tag}
+                      </Link>
+                    ))}
+          </div>
+        )
+      }
+      </div>
       <p>{data.mdx.frontmatter.date}</p>
       <hr/>
       <div className='content'>
