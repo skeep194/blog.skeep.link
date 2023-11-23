@@ -1,0 +1,29 @@
+---
+title: 삽질 끝에 gatsby katex 적용시킨 후기
+tags: [react, gatsby]
+date: 2023-11-23
+---
+## 삽질과 삽질
+지금 대부분의 블로그에 올라와있는 대로 따라하면 작동하질 않았다.
+gatsby가 마크다운을 파싱하는 방법은 `gatsby-transformer-remark`를 사용하는 방법이 있고 `gatsby-plugin-mdx`를 사용하는 방법이 있다.
+나는 mdx파일 사용을 위해 `gatsby-plugin-mdx`를 사용했다.
+여기서 `gatsby-remark-katex` 플러그인을 사용할 때 하필이면 예시 코드가 `gatsby-transformer-remark` 기준으로 되어있다.
+
+[https://www.gatsbyjs.com/plugins/gatsby-remark-katex/](https://www.gatsbyjs.com/plugins/gatsby-remark-katex/)
+
+`gatsby-plugin-mdx`를 사용할 때는 저대로 하면 안된다.
+
+## gatsby-plugin-*
+gatsby-plugin-mdx 공식문서를 살펴보자.
+
+[https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/](https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/)
+
+여기서 `gatsby-plugin-*` 플러그인을 사용할 때는 `options`의 `gatsbyRemarkPlugins`에 넣어주라고 되어있다.
+사실 너무나도 친절하게 적혀있다. 검색으로 나왔던 자료들은 전부 `remark-math`랑 `rehype-katex`를 따로 넣어줬던 것 같은데 다 필요없고 공식 플러그인 만으로 가능하다.
+
+플러그인 설정을 해 주고 `gatsby-browser.js`에 `import 'katex/dist/katex.min.css';`를 추가했다.
+
+## 눈물의 katex
+그래서 공식문서대로 따라하니까 성공했다. 역시 공식 docs가 짱이다.
+
+$$a+b=c$$

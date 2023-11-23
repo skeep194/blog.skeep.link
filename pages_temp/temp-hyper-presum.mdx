@@ -2,7 +2,36 @@
 title: 다차원 누적합
 tags: [ps]
 categories: [algorithm]
-date: 2023-11-07
+date: 2023-11-20
 ---
 ## 누적 합
 누적 합은 잘 알려져있듯이 배열에서 특정 구간의 합을 구하는 테크닉이다.
+
+아래 코드는 1차원 배열에서 누적 합을 구하고 구간 합을 <Mathblock math="O(1)"/>로 구한다.
+
+```presum.cpp
+int n;
+int arr[10000];
+int presum[10000];
+int rangesum(int a, int b)
+{
+    return presum[b] - (a == 0 ? 0 : presum[a-1]);
+}
+
+void make_presum()
+{
+    presum[0] = arr[0];
+    for(int i=1;i<n;++i)
+    {
+        presum[i] = presum[i-1]+arr[i];
+    }
+}
+```
+
+누적 합을 2차원으로 확장할 수 있다는 것도 잘 알려져 있다.
+
+
+## 포함 배제의 원리
+## 다차원 누적합
+## 문제
+4차원 누적합을 구할 수 있다면 바로 풀린다.

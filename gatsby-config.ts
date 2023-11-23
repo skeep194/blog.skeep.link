@@ -1,7 +1,5 @@
 import type { GatsbyConfig } from "gatsby";
 import { remarkCodeHike } from "@code-hike/mdx";
-import math from 'remark-math';
-import katex from 'rehype-katex';
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -18,8 +16,7 @@ const config: GatsbyConfig = {
       options: {
         extensions: [`.mdx`, `.md`],
         mdxOptions: {
-          remarkPlugins: [[remarkCodeHike, {theme: "github-dark", lineNumbers: false}], math],
-          rehypePlugins: [katex]
+          remarkPlugins: [[remarkCodeHike, {theme: "github-dark", lineNumbers: false}]],
         },
         gatsbyRemarkPlugins: [
           {
@@ -28,6 +25,12 @@ const config: GatsbyConfig = {
               maxWidth: 1200,
             },
           },
+          {
+            resolve: `gatsby-remark-katex`,
+            options: {
+              strict: `ignore`
+            }
+          }
         ],
       },
     },"gatsby-plugin-sitemap", {
@@ -74,7 +77,7 @@ const config: GatsbyConfig = {
       sitemap: 'https://blog.skeep.link/sitemap.xml',
       policy: [{userAgent: '*', allow: '/'}]
     }
-  }
+  },
   ],
 
   flags: {
