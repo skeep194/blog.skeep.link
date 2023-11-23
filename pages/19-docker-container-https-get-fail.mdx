@@ -1,0 +1,24 @@
+---
+title: 도커 컨테이너 안에서 https get 실패 이슈
+tags: [docker]
+date: 2023-11-20
+---
+## ubuntu 이미지
+도커 허브에 올라와있는 ubuntu 이미지는 최소한의 배포 환경을 위해 기본적으로 설치되어 있는 패키지가 많이 없다.
+
+## 크롤링을 하려고 했는데
+```crawl.go
+resp, err := http.Get(URL)
+```
+위 코드는 단순히 http get 요청을 보낸다. 로컬에서는 잘 동작했다. 하지만 도커 환경에서만 문제가 생겼다.
+
+`http get return error code: x509: certificate signed by unknown authority`
+
+크하악.. 에러 메시지는 인증 오류가 있다고 한다. ssl 관련 에러인 것 같은데 왜 도커 환경에만 문제가 생기는지 몰라서 학교 선배한테 물어봤다.
+
+알고보니 우분투 기본 이미지는 `ca-certificate`패키지가 없어서 신뢰할 수 있는 인증서가 없었다!!
+`apt install ca-certificate`를 도커 환경에서 실행시키니까 잘 돌아갔다.
+
+## 결론
+로컬 환경이랑 도커 이미지 환경에는 같은 우분투여도 차이가 있다.
+도커 환경에서도 `unminimize`를 사용하면 기본적으로 설치되는 패키지를 지우지 않는 것으로 보인다.
