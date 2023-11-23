@@ -4,7 +4,7 @@ import { remarkCodeHike } from "@code-hike/mdx";
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `RedMage`,
-    siteUrl: `https://www.blog.skeep.link`,
+    siteUrl: `https://blog.skeep.link`,
     description: `RedMage is final fantasy hybrid class. My goal is to study wide range tech like RedMage`,
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
