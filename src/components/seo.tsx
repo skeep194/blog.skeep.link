@@ -31,6 +31,7 @@ const SEO: React.FC<PropsWithChildren<SEOProps>> = ({ title, description, childr
 
   return (
     <>
+      <html lang='ko' />
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width,minimum-scale=1" />
       <meta httpEquiv="content-language" content="ko" />
