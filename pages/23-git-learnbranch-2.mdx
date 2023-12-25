@@ -1,0 +1,45 @@
+---
+title: git learn branch 정리 2
+tags: [git]
+date: 2023-12-25
+---
+## clone
+
+- git clone은 로컬에 원격 저장소를 가져오는 것
+- 원격 브랜치가 생김 \<remote_name\>/\<branch_name\>
+- 원격 브랜치로 checkout 하면 HEAD가 분리됨(로컬에서는 원격 브랜치 직접 수정 불가)
+
+## fetch
+
+- 원격 저장소에는 있지만 로컬에는 없는 커밋 다운로드
+- 원격 브랜치가 가리키는 곳 업데이트 (origin/main)
+- fetch 작업은 로컬의 상태를 변경하지 않음에 유의
+- pull 명령어는 fetch + merge
+
+## fakeTeamwork
+
+- 원격 main에 하나의 커밋을 하기
+- 남이 코드를 건드려서 원격 저장소가 변경된 상황을 가정할 때 사용
+
+## push
+
+- 원격 저장소에 작업 내용 업로드하고 원격 저장소가 새 커밋을 합치고 갱신
+- push를 사용할 때 행동은 git 설정에 따라 결정
+- push \<remote\> \<branch\>로 현재 HEAD에 상관없이 push 가능
+- push \<remote\> \<source\>:\<destination\> 로 특정 source를 원격 저장소의 destination 브랜치로 push 가능
+- fetch는 push의 역과정과 비슷함, push의 인자를 그대로 사용가능
+
+## 협업 과정
+
+- 원격 저장소의 브랜치와 로컬의 원격 브랜치가 다른 경우 push할 수 없음
+- 다른 사람이 원격 저장소에 작업을 한 경우
+- 이럴 때는 fetch 후 merge 혹은 rebase 해서 원격 저장소와 로컬의 원격 브랜치를 동기화 해 줘야함
+- git pull (fetch + merge)
+- git pull —rebase (fetch + rebase)
+- pull 전에 로컬 변경사항이 있다면 commit 해야 함
+
+## 원격 추적
+
+- git remote
+- 원격 브랜치인 origin/main은 main 브랜치가 원격 추척 하는 브랜치임
+- git branch -u 혹은 git checkout -b로 브랜치를 만들면서 원격 추적 브랜치 설정 가능
